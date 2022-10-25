@@ -144,6 +144,7 @@ export default {
     name: "crear-client",
     data() {
         return {
+            client_id:"",
             client: {
                 first_name: "",
                 last_name: "",
@@ -155,21 +156,49 @@ export default {
             payments: [{}],
         };
     },
+    created(){
+
+        this.showclients()
+
+
+    },
     methods: {
+
+        async showclients() {
+            await this.axios
+                .get("/api/clients")
+                .then((response) => {
+                    this.clients = response.data;
+                    if(this.clients.length<0){
+                        this.client_id = 1
+                    }else{
+                        this.client_id = this.clients.length + 1
+                    }
+                    console.log(this.client_id)
+                })
+                .catch((error) => {
+                    this.client = [];
+                });
+        },
         addPayment() {
             if (this.payments.length < 5) this.payments.push({});
         },
         async create() {
-            for (let index = 0; index < this.payments.length; index++) {
-                this.axios.post("api/payments", this.payments[index])
-                .then((response)=>{
-                })
-                .catch((error) => {
-                    console.log(error);
-                })}
             await this.axios
                 .post("/api/clients", this.client)
                 .then((response) => {
+                    console.log(response)
+                    for (let index = 0; index < this.payments.length; index++) {
+
+                        this.payments[index].client_id = this.client_id
+                        this.axios
+                            .post("api/payments", this.payments[index])
+                            .then((response) => {})
+                            .catch((error) => {
+                                console.log(error);
+                            });
+                    }
+
                     this.$router.push({ name: "showClients" });
                 })
                 .catch((error) => {

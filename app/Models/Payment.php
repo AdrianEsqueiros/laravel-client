@@ -12,5 +12,6 @@ class Payment extends Model
         'transaction',
         'amount',
         'date',
+        'client_id'
     ];
 }
