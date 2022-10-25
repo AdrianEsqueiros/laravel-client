@@ -30,6 +30,7 @@
                     </thead>
                     <tbody>
                         <tr v-for="client in clients" :key="client.id">
+
                             <td>
                                 {{ client.first_name }} {{ client.last_name }}
                             </td>
@@ -37,8 +38,10 @@
                             <td>{{ client.phone }}</td>
                             <td>{{ client.email }}</td>
                             <td>{{ client.address }}</td>
-                            <td>{{ client.id }}</td>
-                            <td>{{ client.id }}</td>
+                                                        <!-- <tr v-for="payment in payments" :key="payment.client_id">
+
+                                <td>{{ payment.id }}</td>
+                                <td>{{ client.id }}</td> -->
 
                             <td>
                                 <!-- llamamos al componente para Editar     -->
@@ -57,6 +60,7 @@
                                     ><i class="fas fa-trash"></i
                                 ></a>
                             </td>
+                            <!-- </tr> -->
                         </tr>
                     </tbody>
                 </table>
@@ -71,6 +75,9 @@ export default {
     data() {
         return {
             clients: [],
+            payments: [],
+            total: 0,
+            count: [],
         };
     },
     mounted() {
@@ -82,6 +89,19 @@ export default {
                 .get("/api/clients")
                 .then((response) => {
                     this.clients = response.data;
+                    this.axios.get("/api/payments").then((res) => {
+                        // for (let index = 0;index < this.payments.length;index++) {
+                        //         if(this.payments[index].client_id == this.clients[2].id )
+                        //         this.total +=1
+                        //         this.count.push(this.total)
+                        //         console.log(this.count);
+
+                            this.payments = res.data;
+
+                            // this.total = this.payments[index].client_id
+                            // console.log(this.payments[index].client_id);
+                        // }
+                    });
                 })
                 .catch((error) => {
                     this.client = [];
